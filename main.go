@@ -1,8 +1,12 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/joho/godotenv"
+	"github.com/swholobaugh/go-fiber/config"
 	"github.com/swholobaugh/go-fiber/routes"
 )
 
@@ -13,11 +17,20 @@ func main() {
 	//Middleware
 	app.Use(logger.New())
 
+	// dotenv
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error loading .env file")
+	}
+
+	// config db
+	config.ConnectDB()
+
 	//Setup routes
 	setupRoutes(app)
 
 	//Listen on server 8000 and catch any errors
-	err := app.Listen(":8000")
+	err = app.Listen(":8000")
 
 	//handle error
 	if err != nil {
